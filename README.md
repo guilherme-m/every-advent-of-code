@@ -1,6 +1,6 @@
 # Doing Every Year of Advent of Code
 
-This is my attempt to do every year of the [Advent of Code](www.adventofcode.com) (AoC) challenge, since 2015.
+This is my attempt to do every year of the [Advent of Code](http://www.adventofcode.com) (AoC) challenge, since 2015.
 
 I'm still learning to develop algorithms, so you will encounter some inefficient implementations. If you'd like to share some advice to improve them, I'll be happy to hear!
 
