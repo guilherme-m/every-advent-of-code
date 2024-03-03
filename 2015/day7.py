@@ -1,80 +1,72 @@
 # AoC - 2015 - Day 7
 # Guilherme M.
-# 2024-02-29
+# 2024-03-02
 import re
 
 class Circuit:
+    gates = {
+       'AND': lambda x, y: x & y & 0xFFFF,
+       'OR':  lambda x, y: x | y & 0xFFFF,
+       'LSHIFT': lambda x, y: x << y & 0xFFFF,
+       'RSHIFT': lambda x, y: x >> y & 0xFFFF,
+       'NOT': lambda x: ~x & 0xFFFF
+    }
+
     def __init__(self):
         self.wires = {}
     
-    def __get_value(self, value):
-        try:
-            return int(value)
-        except:
-            return self.wires[value]
-            
-    def __calculate_expression(self, expression):
-        if len(expression) == 1:
-            return self.__get_value(expression[0])
-        elif len(expression) == 2:
-            return ~self.__get_value(expression[1]) & 0xFFFF
-        elif len(expression) == 3:
-            x = self.__get_value(expression[0])
-            y = self.__get_value(expression[2])
-            operation = expression[1]
-            
-            if operation == 'AND':
-                return x & y & 0xFFFF
-            elif operation == 'OR':
-                return x | y & 0xFFFF
-            elif operation == 'LSHIFT':
-                return x << y & 0xFFFF
-            elif operation == 'RSHIFT':
-                return x >> y & 0xFFFF
-    
-    def __parse_input(self, user_input):
-        return re.match(r'(.+) -> (.+)', user_input).groups()
-    
-    def __input_result(self, user_input):
-        expression, wire = self.__parse_input(user_input)
-        
-        return wire, self.__calculate_expression(expression.split(' '))
-    
-    def __check_signal(self, expression):
-        return (expression.isnumeric() 
-                    or expression in self.wires.keys())
-    
-    def put_into_wire(self, user_input):
-        wire, value = self.__input_result(user_input)
-        self.wires[wire] = value
-    
-    def inputs_have_signal(self, user_input):
-        expression, _ = self.__parse_input(user_input)
-        expression = expression.split(' ')
-        
-        if 1 <= len(expression) <= 2:
-            i = len(expression) - 1
-            return self.__check_signal(expression[i])
-        elif len(expression) == 3:
-            return (self.__check_signal(expression[0]) 
-                    and self.__check_signal(expression[2]))
-        
-    def get(self, key):
-        return self.wires[key]
-    
     def __str__(self):
-        w = sorted(
-            self.wires.items(),
-            key=lambda x: x[0]
-        )
-        return f'{dict(w)}'
+        wires_str = {k: v.result for k, v in self.wires.items()}
+        return f'{dict(sorted(wires_str.items()))}'
+    
+    def put_into_wire(self, user_input: str):
+        gate, wire = re.match(r'(.+) -> (.+)', user_input).groups()
+        self.wires[wire] = Wire(gate.strip(), None)
+    
+    def get(self, wire):
+        if self.wires[wire].result:
+            return self.wires[wire].result
+        else:
+            result = self.__calculate(wire)
+            self.wires[wire].result = result
+            return result
+    
+    def set(self, wire, value):
+        self.wires[wire].result = value
+    
+    def __get_value(self, value:str):
+        if value.isnumeric():
+            return int(value)
+        else:
+            return self.get(value)
+    
+    def __calculate(self, wire):
+        gate = self.wires[wire].gate.split()
+        if len(gate) == 1:
+            return self.__get_value(gate[0])
+        elif len(gate) == 2:
+            return self.gates[gate[0]](self.__get_value(gate[1]))
+        elif len(gate) == 3:
+            return self.gates[gate[1]](
+                self.__get_value(gate[0]),
+                self.__get_value(gate[2])
+                )
+            
+        
+
+class Wire:
+    def __init__(self, gate, result):
+        self.gate = gate
+        self.result = result
+        
+    def __str__(self):
+        d = {'operation': self.gate,
+                'result': self.result}
+        return f'{d}'
     
 circuit = Circuit()
-input = open('inputs/day7.txt').read().split('\n')
-while len(input) > 0:
-    if (circuit.inputs_have_signal(input[0])):
-        circuit.put_into_wire(input[0])
-        input.pop(0)
-    else:
-        input = input[1:] + input[:1]
-print(circuit.get('a'))
+
+with open('inputs/day7.txt', 'r') as file:
+    for line in file:
+        circuit.put_into_wire(line)
+print(f'part1 : {circuit.get("a")}')
