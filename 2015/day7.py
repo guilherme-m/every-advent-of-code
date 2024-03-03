@@ -69,7 +69,7 @@ circuit = Circuit()
 with open('inputs/day7.txt', 'r') as file:
     for line in file:
         circuit.put_into_wire(line)
-print(f'part1 : {circuit.get("a")}')
+print(f'part 1 : {circuit.get("a")}')
 
 circuit = Circuit()
 with open('inputs/day7.txt', 'r') as file:
