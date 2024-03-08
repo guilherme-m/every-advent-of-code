@@ -15,9 +15,6 @@ with open("inputs/day8.txt", 'r') as file:
         total += len(line)
         total_encoded += len(line[1:-1].encode().decode('unicode-escape'))
         total_repr += len(line_repr)
-        print(line, line_repr)
         
-        
-        
-print(total - total_encoded)
-print(total_repr - total)
+print(f'part 1: {total - total_encoded}')
+print(f'part 2: {total_repr - total}')
