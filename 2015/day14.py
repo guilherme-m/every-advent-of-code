@@ -33,10 +33,30 @@ class Race:
         self.reindeers = reindeers
         self.time = time
         
+    def __get_distances(self, time = None):
+        if time == None:
+            time = self.time
+        distances = [r.get_distance(time) for r in self.reindeers]
+        return sorted(distances, 
+                   key=lambda x: x[1])
+    
+    def __get_winners(self, time = None):
+        distances = self.__get_distances(time)
+        max_dist = max(distances, key=lambda x: x[1])[1]
+        return list(filter(lambda x: x[1] == max_dist, distances))
+    
     def get_winner(self):
         distances = [r.get_distance(self.time) for r in self.reindeers]
         return max(distances, 
-                   key=lambda x: x[1])
+                   key=lambda x: x[1])[1]
+    
+    def get_seconds_leading(self):
+        score = {}
+        for t in range(1, self.time + 1):
+            winners = self.__get_winners(t)
+            for name, _ in winners:
+                score[name] = score.get(name, 0) + 1
+        return max(score.items(), key=lambda x: x[1])[1]
     
     
 reindeers = []
@@ -47,4 +67,6 @@ with open('inputs/day14.txt', 'r') as file:
     for line in file:
         reindeers.append(Reindeer(line))
 race = Race(reindeers, race_time)
-print(race.get_winner())
+
+print(f'part 1: {race.get_winner()}')
+print(f'part 2: {race.get_seconds_leading()}')
