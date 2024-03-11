@@ -34,6 +34,10 @@ class Cookie:
     def __init__(self, ingredients: list[Ingredient]):
         self.ingredients = ingredients
         self.score = self.__get_score()
+        self.calories = self.__get_calories()
+        
+    def __get_calories(self):
+        return sum(i.quantity*i.attributes['calories'] for i in self.ingredients)
         
     def __get_score(self):
         partial_scores = {
@@ -74,4 +78,17 @@ for spoon in spoons:
         if new_cookie.score > best_cookie.score:
             best_cookie = new_cookie
             
-print(best_cookie.score)
+print(f'part 1: {best_cookie.score}')
+
+best_cookie = None
+for spoon in spoons:
+    [i.set_quantity(s) for i, s in zip(ingredients, spoon)]
+    new_cookie = Cookie(ingredients)
+    if new_cookie.calories != 500:
+        continue
+    if best_cookie == None:
+        best_cookie = new_cookie
+    else:
+        if new_cookie.score > best_cookie.score:
+            best_cookie = new_cookie
+print(f'part 2: {best_cookie.score}')
