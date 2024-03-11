@@ -1,6 +1,6 @@
 # AoC - 2015 - Day 15
 # Guilherme M.
-# 2024-03-09
+# 2024-03-11
 import re
 import numpy as np
 import itertools
