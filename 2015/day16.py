@@ -33,15 +33,28 @@ class GiftDetector:
         
         return aunt, gift
     
-    def check_aunt(self, gift):
+    def __compare_items(self, gift, value, part):
+        comparison = self.machine_output.get(gift, 0) == value
+        if part == 2:
+            if gift in ['cats', 'trees']:
+                comparison = value > self.machine_output.get(gift, 0)
+            elif gift in ['pomeranians', 'goldfish']:
+                comparison = value < self.machine_output.get(gift, 0)
+        
+        return comparison
+                
+    def check_aunt(self, gift, part=1):
         aunt, gift = self.__parse_aunt_gift(gift)
-        if all(self.machine_output.get(k, None) == v for k, v in gift.items()):
+        if all(self.__compare_items(k,v, part) for k, v in gift.items()):
             self.aunts.append(aunt)
 
 gift_detector = GiftDetector(machine_output)
+gift_detector_part_2 = GiftDetector(machine_output)
 
 with open('inputs/day16.txt', 'r') as file:
     for line in file:
         gift_detector.check_aunt(line)
+        gift_detector_part_2.check_aunt(line, 2)
 
-print(gift_detector.aunts)
+print(f' part 1: {gift_detector.aunts}')
+print(f' part 2: {gift_detector_part_2.aunts}')
