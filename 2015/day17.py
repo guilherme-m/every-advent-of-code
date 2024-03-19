@@ -11,7 +11,7 @@ class FillingCombinations:
         self.liters = liters
         self.containers = containers
         
-    def __find_filling_options(self):
+    def __find_combinations(self):
         smallest_container = min(self.containers)
         max_num_of_containers = self.liters // smallest_container
         
@@ -25,8 +25,16 @@ class FillingCombinations:
             
         return [c for c in container_combinations if sum(c) == self.liters]
     
-    def get_num_of_combinations(self):
-        return len(self.__find_filling_options())
+    def get_minimum_used_containers(self):
+        combinations = self.__find_combinations()
+        min_used_containers = min(len(c) for c in combinations)
+        
+        return len([c for c in combinations if len(c) == min_used_containers])
+        
+    
+    def get_total_combinations(self):
+        return len(self.__find_combinations())
 
 fill_combs = FillingCombinations(150, containers)
-print(fill_combs.get_num_of_combinations())
+print(f'part 1: {fill_combs.get_total_combinations()}')
+print(f'part 2: {fill_combs.get_minimum_used_containers()}')
