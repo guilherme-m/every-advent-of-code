@@ -61,7 +61,7 @@ class Race:
     
 reindeers = []
 
-race_time = int(open('inputs/day14_2.txt', 'r').read())
+race_time = 2503
 
 with open('inputs/day14.txt', 'r') as file:
     for line in file:
