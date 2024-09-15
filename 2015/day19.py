@@ -4,6 +4,7 @@
 import re
 import pandas as pd
 import numpy as np
+import random
 
 conversions = []
 
@@ -30,29 +31,40 @@ for conv in conversions:
 
 print(len(total_conversions))
 
-start = [0, [['e']]]
+molecules = ''.join(molecules)
 
-def find_medicine(start):
-    counter, fabrications = start
-    counter += 1
-    new_fabrications = set()
-    for fab in fabrications:
-        
-        fab = pd.Series(fab)
-        for conv in conversions:
-            indexes = np.where(fab == conv[0])[0]
-            for idx in indexes:
-                
-                new_fabrications.add(''.join(np.where(
-                    range(len(fab)) == idx, conv[1], np.array(fab)
-                    ).tolist()))
-                
-    new_fabrications = [re.findall(r'[A-Z][a-z]{0,1}', f) for f in new_fabrications]
-    print('--> ', len(new_fabrications))
-    new_start = [counter, new_fabrications]
-    if ''.join(molecules) in [''.join(s) for s in new_fabrications]:
-        return counter
-    else:
-        return find_medicine(new_start)
-        
-print(find_medicine(start))
+def find_medicine(conversions_list):
+    new_molecules = molecules
+    counter = 0
+    patt = re.compile(r'^e+$')
+    for _ in range(1_000):
+        random.shuffle(conversions_list)
+        if re.match(patt, new_molecules):
+            break
+        for c in conversions_list:
+            idx = [s.start() for s in re.finditer(c[1], new_molecules)]
+            
+            if len(idx) > 0:
+                idx = random.sample(idx, 1)[0]
+                new_molecules = new_molecules[:idx] + c[0] + new_molecules[idx + len(c[1]):]
+                counter += 1
+                break
+    return counter, new_molecules
+    
+    
+trials = 25
+success = []
+
+for i in range(trials):
+    counter, conversion = find_medicine(conversions)
+    if conversion == 'e':
+        success.append((counter, conversion))
+
+min_steps = sorted(success, key=lambda x: x[0])
+
+try:
+    min_steps = min_steps[0][0]
+except:
+    min_steps = ''
+
+print(min_steps)
