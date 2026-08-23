@@ -3,8 +3,8 @@ public class Main{
     public static void main(String[] args){
 
         if(args.length == 0){
-            System.out.println("Informar dia desejado");
-            return;
+            throw new RuntimeException("Informar dia desejado");
+            
         }
 
         Integer day;
@@ -15,13 +15,13 @@ public class Main{
 
         } catch(NumberFormatException nfe){
 
-            System.out.println("Formato de dia errado");
-            return;
-
+            throw new RuntimeException("Formato de dia errado");
+            
         }
 
         switch(day){
             case 1 -> Day01.run();
+            case 2 -> Day02.run();
             default -> System.out.println("Dia nao implementado");
         }
     }
