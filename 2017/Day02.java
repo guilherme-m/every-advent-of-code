@@ -12,6 +12,7 @@ public class Day02{
     public static void run(){
 
         partOne();
+        partOneWithSummary();
         partTwo();
     
     }
@@ -47,6 +48,25 @@ public class Day02{
 
         
         System.out.println("Part 1: %s".formatted(sum));
+    }
+
+    static private void partOneWithSummary(){
+
+        var lines = readInput();
+
+        var sum = lines.stream()
+            .map(l -> {
+                return Stream.of(l.split("[^0-9]+")).map(Integer::valueOf).toList();
+            })
+            .map(l -> {
+                var summary = l.stream().mapToInt(x -> x).summaryStatistics();
+                return summary.getMax() - summary.getMin();
+            })
+            .reduce(0, (x1,x2) -> x1 + x2);
+
+
+        
+        System.out.println("Part 1 (with summary): %s".formatted(sum));
     }
 
     static private void partTwo(){
