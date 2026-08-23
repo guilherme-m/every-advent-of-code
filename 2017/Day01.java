@@ -1,23 +1,18 @@
 import java.nio.file.*;
 import java.io.IOException;
+import java.util.stream.*;
 
 public class Day01{
 
     public static void run(){
         partOne();
+        partOneWithIntStream();
         partTwo();
     }
 
     public static void partOne(){
 
-        String lines;
-
-        try{
-            lines = Files.readString(Path.of("inputs/Day01.txt"));
-        } catch(IOException ioe){
-            ioe.printStackTrace();
-            return;
-        }
+        String lines = readInput();
 
         int sum = 0;
 
@@ -33,16 +28,24 @@ public class Day01{
 
     }
 
+    public static void partOneWithIntStream(){
+
+        String lines = readInput();
+
+        int sum = IntStream
+            .range(0, lines.length())
+            .filter(i -> lines.charAt(i) == lines.charAt((i + 1) % lines.length()))
+            .map(i -> Character.digit(lines.charAt(i), 10))
+            .sum();
+
+        
+       System.out.println("Part 1 (with IntStream):" + sum);
+
+    }
+
     public static void partTwo(){
 
-        String lines;
-
-        try{
-            lines = Files.readString(Path.of("inputs/Day01.txt"));
-        } catch(IOException ioe){
-            ioe.printStackTrace();
-            return;
-        }
+        String lines = readInput();
 
         char[] chars = lines.toCharArray();
 
@@ -62,6 +65,17 @@ public class Day01{
 
     }
 
+    public static String readInput(){
+         try{
+            String lines = Files.readString(Path.of("inputs/Day01.txt"));
 
+            return lines;
+        } catch(IOException ioe){
+            ioe.printStackTrace();
+            return "";
+        }
+
+
+    }
 
 }
