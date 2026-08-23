@@ -66,6 +66,7 @@ public class Day02{
     private static Integer getDivisors(List<Integer> l){
         int sum = 0;
         
+        outer:
         for(int i = 0; i < l.size(); i++){
 
             for(int j = 0; j < l.size(); j++){
@@ -74,11 +75,12 @@ public class Day02{
                 numerator = l.get(i);
                 denominator = l.get(j);
 
-                if(i == j || numerator < denominator || numerator % denominator != 0){
+                if(i == j || numerator <= denominator || numerator % denominator != 0){
                     continue;
                 }
 
                 sum += numerator / denominator;
+                continue outer;
             }
 
         }
