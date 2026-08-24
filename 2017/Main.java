@@ -22,6 +22,7 @@ public class Main{
         switch(day){
             case 1 -> Day01.run();
             case 2 -> Day02.run();
+            case 3 -> new Day03().run();
             default -> System.out.println("Dia nao implementado");
         }
     }
