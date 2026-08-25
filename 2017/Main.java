@@ -23,6 +23,7 @@ public class Main{
             case 1 -> Day01.run();
             case 2 -> Day02.run();
             case 3 -> new Day03().run();
+            case 4 -> new Day04().run();
             default -> System.out.println("Dia nao implementado");
         }
     }
