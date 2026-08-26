@@ -39,7 +39,7 @@ public class Day01{
             .sum();
 
         
-       System.out.println("Part 1 (with IntStream):" + sum);
+       System.out.println("Part 1 (with IntStream): " + sum);
 
     }
 
