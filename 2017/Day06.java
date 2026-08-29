@@ -10,6 +10,7 @@ public class Day06 implements Day {
     public void run(){
 
         partOne();
+        partTwo();
     }
 
     private List<Integer> readInput(){
@@ -36,13 +37,23 @@ public class Day06 implements Day {
 
     }
 
-    public void partOne(){
+    private void partOne(){
 
         var banks = new Banks(readInput());
 
         int count = banks.redistributionsUntilSameConfiguration();
 
-        System.out.println(count);
+        System.out.println("Part 1: " + count);
+    }
+
+    private void partTwo(){
+
+        var banks = new Banks(readInput());
+
+        var count = banks.redistributionsCountFromSameConfiguration();
+
+        System.out.println("Part 2: " + count);
+
     }
 
 }
@@ -98,11 +109,43 @@ class Banks{
                 alreadyHasConfig = true;
             } else{
 
-                configurations.add(banks);
+                configurations.add(List.copyOf(banks));
             }
             
         }
         return redistributionsCount;
+
+    }
+
+    public int redistributionsCountFromSameConfiguration(){
+
+        boolean alreadyHasConfig = false;
+
+        int redistributionsCount = 0;
+
+        Map<List<Integer>, Integer> map = new HashMap<>();
+
+        map.put(
+            List.copyOf(banks), 
+            redistributionsCount
+        );
+
+
+        while(!alreadyHasConfig){
+
+            redistribute();
+            redistributionsCount++;
+            if(map.containsKey(banks)){
+                alreadyHasConfig = true;
+            } 
+
+            map.putIfAbsent(
+                List.copyOf(banks),
+                redistributionsCount
+            );
+            
+        }
+        return redistributionsCount - map.get(banks);
 
     }
 
