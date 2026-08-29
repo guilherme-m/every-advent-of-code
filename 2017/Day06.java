@@ -59,7 +59,7 @@ class Banks{
         this.configurations = new HashSet<>();
 
         this.configurations.add(
-            this.banks
+            List.copyOf(this.banks)
         );
     }
 
@@ -80,7 +80,7 @@ class Banks{
             );
 
         }
-        System.out.println(banks);
+        
 
     }
 
