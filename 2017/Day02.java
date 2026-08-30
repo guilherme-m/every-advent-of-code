@@ -7,9 +7,9 @@ import java.util.stream.*;
 import java.util.*;
 
 
-public class Day02{
+public class Day02 implements Day{
 
-    public static void run(){
+    public void run(){
 
         partOne();
         partOneWithSummary();
@@ -17,7 +17,7 @@ public class Day02{
     
     }
 
-    private static List<String> readInput(){
+    private List<String> readInput(){
 
         try{
 
@@ -30,7 +30,7 @@ public class Day02{
         }
     }
 
-    static private void partOne(){
+    private void partOne(){
 
         var lines = readInput();
 
@@ -50,7 +50,7 @@ public class Day02{
         System.out.println("Part 1: %s".formatted(sum));
     }
 
-    static private void partOneWithSummary(){
+    private void partOneWithSummary(){
 
         var lines = readInput();
 
@@ -69,7 +69,7 @@ public class Day02{
         System.out.println("Part 1 (with summary): %s".formatted(sum));
     }
 
-    static private void partTwo(){
+    private void partTwo(){
 
         var lines = readInput();
 
@@ -83,7 +83,7 @@ public class Day02{
         System.out.println("Part 2: %s".formatted(divisors));
     }    
 
-    private static Integer getDivisors(List<Integer> l){
+    Integer getDivisors(List<Integer> l){
         int sum = 0;
         
         outer:

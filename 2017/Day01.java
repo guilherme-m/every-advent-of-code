@@ -2,15 +2,15 @@ import java.nio.file.*;
 import java.io.IOException;
 import java.util.stream.*;
 
-public class Day01{
+public class Day01 implements Day{
 
-    public static void run(){
+    public void run(){
         partOne();
         partOneWithIntStream();
         partTwo();
     }
 
-    public static void partOne(){
+    public void partOne(){
 
         String lines = readInput();
 
@@ -28,7 +28,7 @@ public class Day01{
 
     }
 
-    public static void partOneWithIntStream(){
+    public void partOneWithIntStream(){
 
         String lines = readInput();
 
@@ -43,7 +43,7 @@ public class Day01{
 
     }
 
-    public static void partTwo(){
+    public void partTwo(){
 
         String lines = readInput();
 
@@ -65,7 +65,7 @@ public class Day01{
 
     }
 
-    public static String readInput(){
+    public String readInput(){
          try{
             String lines = Files.readString(Path.of("inputs/Day01.txt"));
 

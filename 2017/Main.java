@@ -19,15 +19,18 @@ public class Main{
             
         }
 
-        switch(day){
-            case 1 -> Day01.run();
-            case 2 -> Day02.run();
-            case 3 -> new Day03().run();
-            case 4 -> new Day04().run();
-            case 5 -> new Day05().run();
-            case 6 -> new Day06().run();
-            default -> System.out.println("Dia nao implementado");
-        }
+        Day d = switch(day){
+            case 1 -> new Day01();
+            case 2 -> new Day02();
+            case 3 -> new Day03();
+            case 4 -> new Day04();
+            case 5 -> new Day05();
+            case 6 -> new Day06();
+            case 7 -> new Day07();
+            case null, default -> throw new RuntimeException("Dia nao implementado");
+        };
+
+        d.run();
     }
 
 
