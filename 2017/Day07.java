@@ -99,17 +99,28 @@ public class Day07 implements Day {
 
             Program start = programsMap.get(getRoot());
 
+            Map<Program, Integer> totalWeights = new HashMap<>();
+
             public int totalWeight(Program p) {
+
+                int weight;
+
+                if(totalWeights.containsKey(p)){
+                    return totalWeights.get(p);
+                }
+
                 if (p.children() == null) {
 
-                    return p.weight();
+                    weight = p.weight();
                 } else {
 
-                    return p.weight() + p.children().stream()
+                    weight = p.weight() + p.children().stream()
                             .map(c -> totalWeight(programsMap.get(c)))
                             .reduce(0, (c1, c2) -> c1 + c2);
 
                 }
+
+                return weight;
             }
 
             public int find() {
