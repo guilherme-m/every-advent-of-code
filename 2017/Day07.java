@@ -11,9 +11,10 @@ public class Day07 implements Day {
     public void run() {
 
         partOne();
+        partTwo();
     }
 
-    private List<Program> readInput() {
+    protected List<Program> readInput() {
 
         Pattern p = Pattern.compile(
                 "([a-z]+) \\(([0-9]+)\\)(?: -> (.+))?");
@@ -59,6 +60,11 @@ public class Day07 implements Day {
 
     private void partOne() {
 
+        System.out.println("Part 1: " + getRoot());
+
+    }
+
+    private String getRoot() {
         var input = readInput();
 
         var allPrograms = input.stream()
@@ -71,9 +77,94 @@ public class Day07 implements Day {
 
         allPrograms.removeAll(childrenPrograms);
 
-        System.out.println("Part 1: " + allPrograms.stream().findFirst().get());
+        return allPrograms.stream().findFirst().get();
+    }
+
+    private void partTwo() {
+
+        String unbalancedProgram = findUnbalancedProgram();
+
+        System.out.println("Part 2: " + unbalancedProgram);
 
     }
+
+    private String findUnbalancedProgram() {
+
+        class UnbalancedProgramFinder {
+
+            List<Program> programs = readInput();
+
+            Map<String, Program> programsMap = programs.stream()
+                    .collect(Collectors.toMap(p -> p.name(), p -> p));
+
+            Program start = programsMap.get(getRoot());
+
+            public int totalWeight(Program p) {
+                if (p.children() == null) {
+
+                    return p.weight();
+                } else {
+
+                    return p.weight() + p.children().stream()
+                            .map(c -> totalWeight(programsMap.get(c)))
+                            .reduce(0, (c1, c2) -> c1 + c2);
+
+                }
+            }
+
+            public int find() {
+                Program parent = start;
+
+                Map<Program, Integer> result = null;
+                while (start.children() != null) {
+                    
+                    var childPrograms = start.children().stream()
+                            .map(s -> programsMap.get(s))
+                            .toList();
+
+                    if (childPrograms.stream().anyMatch(l -> totalWeight(l) != totalWeight(childPrograms.get(0)))){
+
+                        parent = start;
+                        
+                    
+                    }
+
+
+                    start = start.children().stream()
+                            .map(s -> programsMap.get(s))
+                            .sorted((p1, p2) -> totalWeight(p2) - totalWeight(p1))
+                            .findFirst()
+                            .get();
+
+                }
+                result = parent
+                        .children()
+                        .stream()
+                        .map(s -> programsMap.get(s))
+                        .toList()
+                        .stream()
+                        .collect(Collectors.toMap(p -> p, p -> totalWeight(p)));
+
+                return newWeight(result);
+
+            }
+
+            private int newWeight(Map<Program, Integer> m){
+                var heavyProgram = m.entrySet().stream().max(Map.Entry.comparingByValue()).get();
+
+                int min = m.entrySet().stream().min(Map.Entry.comparingByValue()).get().getValue();
+
+                int diff = heavyProgram.getValue() - min;
+
+                return heavyProgram.getKey().weight() - diff;
+
+            }
+
+        }
+
+        return ""  + new UnbalancedProgramFinder().find();
+    }
+
 }
 
 record Program(String name, int weight, List<String> children) {
