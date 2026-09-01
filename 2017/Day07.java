@@ -144,12 +144,18 @@ public class Day07 implements Day {
                     var weights = start.children().stream()
                             .map(s -> programsMap.get(s))
                             .collect(Collectors.groupingBy(p -> totalWeight(p)))
-                            .entrySet()
+                            .values()
                             .stream()
-                            .collect(Collectors.toMap(e -> e.getValue().size(), e -> e.getValue().get(0),
-                                    (e1, e2) -> e1));
+                            .filter(c -> c.size() == 1)
+                            .findFirst();
 
-                    start = weights.getOrDefault(1, weights.values().iterator().next());
+                    if(weights.isPresent()){
+
+                        start = weights.get().get(0);
+                    } else {
+                        break;
+                    }
+
 
                 }
                 result = parent
