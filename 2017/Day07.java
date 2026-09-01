@@ -105,7 +105,7 @@ public class Day07 implements Day {
 
                 int weight;
 
-                if(totalWeights.containsKey(p)){
+                if (totalWeights.containsKey(p)) {
                     return totalWeights.get(p);
                 }
 
@@ -120,6 +120,8 @@ public class Day07 implements Day {
 
                 }
 
+                totalWeights.put(p, weight);
+
                 return weight;
             }
 
@@ -128,24 +130,26 @@ public class Day07 implements Day {
 
                 Map<Program, Integer> result = null;
                 while (start.children() != null) {
-                    
+
                     var childPrograms = start.children().stream()
                             .map(s -> programsMap.get(s))
                             .toList();
 
-                    if (childPrograms.stream().anyMatch(l -> totalWeight(l) != totalWeight(childPrograms.get(0)))){
+                    if (childPrograms.stream().anyMatch(l -> totalWeight(l) != totalWeight(childPrograms.get(0)))) {
 
                         parent = start;
-                        
-                    
+
                     }
 
-
-                    start = start.children().stream()
+                    var weights = start.children().stream()
                             .map(s -> programsMap.get(s))
-                            .sorted((p1, p2) -> totalWeight(p2) - totalWeight(p1))
-                            .findFirst()
-                            .get();
+                            .collect(Collectors.groupingBy(p -> totalWeight(p)))
+                            .entrySet()
+                            .stream()
+                            .collect(Collectors.toMap(e -> e.getValue().size(), e -> e.getValue().get(0),
+                                    (e1, e2) -> e1));
+
+                    start = weights.getOrDefault(1, weights.values().iterator().next());
 
                 }
                 result = parent
@@ -160,20 +164,35 @@ public class Day07 implements Day {
 
             }
 
-            private int newWeight(Map<Program, Integer> m){
-                var heavyProgram = m.entrySet().stream().max(Map.Entry.comparingByValue()).get();
+            private int newWeight(Map<Program, Integer> m) {
 
-                int min = m.entrySet().stream().min(Map.Entry.comparingByValue()).get().getValue();
+                var weights = m.entrySet().stream()
+                        .collect(Collectors.groupingBy(
+                                e -> e.getValue(),
+                                Collectors.mapping(e -> e.getKey(), Collectors.toList())));
 
-                int diff = heavyProgram.getValue() - min;
+                var oddProgram = m.keySet().stream().findAny().get();
+                int okayProgramWeight = m.values().stream().findAny().get();
 
-                return heavyProgram.getKey().weight() - diff;
+                for (var e : weights.entrySet()) {
+
+                    if (e.getValue().size() == 1) {
+                        oddProgram = e.getValue().get(0);
+                    } else {
+                        okayProgramWeight = e.getKey();
+                    }
+
+                }
+
+                int diff = okayProgramWeight - m.get(oddProgram);
+
+                return oddProgram.weight() + diff;
 
             }
 
         }
 
-        return ""  + new UnbalancedProgramFinder().find();
+        return "" + new UnbalancedProgramFinder().find();
     }
 
 }
