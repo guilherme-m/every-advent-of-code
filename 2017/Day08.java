@@ -38,9 +38,11 @@ public class Day08 implements Day {
 
         var input = readInput();
 
-        input.forEach(i -> RegisterProgram.addInstruction(i));
+        RegisterProgram rp = new RegisterProgram();
 
-        int max = RegisterProgram.registers
+        input.forEach(i -> rp.addInstruction(i));
+
+        int max = rp.registers
                 .entrySet()
                 .stream()
                 .max((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
@@ -54,7 +56,7 @@ public class Day08 implements Day {
 
 class RegisterProgram {
 
-    public static Map<String, Integer> registers = new HashMap<>();
+    public final Map<String, Integer> registers = new HashMap<>();
 
     public static record Instruction(
             String register1,
@@ -64,49 +66,49 @@ class RegisterProgram {
             String test,
             Integer testNumber) {
 
-        private void process() {
+    }
 
-            if (doTest()) {
+    private void process(Instruction i) {
 
-                doOperation();
+        if (doTest(i)) {
 
-            }
-
-        }
-
-        private boolean doTest() {
-            Integer registerValue = registers.getOrDefault(register2, 0);
-            return switch (test) {
-                case "==" -> registerValue.intValue() == testNumber.intValue();
-                case ">" -> registerValue.intValue() > testNumber.intValue();
-                case ">=" -> registerValue.intValue() >= testNumber.intValue();
-                case "<=" -> registerValue.intValue() <= testNumber.intValue();
-                case "<" -> registerValue.intValue() < testNumber.intValue();
-                case "!=" -> registerValue.intValue() != testNumber.intValue();
-                case null, default -> throw new RuntimeException("Teste invalido");
-
-            };
-        }
-
-        private void doOperation() {
-
-            Integer increment = operationNumber;
-
-            if (operation.equals("dec")) {
-                increment = -increment;
-            } else if (!operation.equals("inc")) {
-                throw new RuntimeException("Operacao invalida");
-            }
-
-            registers.merge(register1, increment, (v1, v2) -> v1 + v2);
+            doOperation(i);
 
         }
 
     }
 
-    public static void addInstruction(Instruction i) {
+    private boolean doTest(Instruction i) {
+        Integer registerValue = registers.getOrDefault(i.register2(), 0);
+        return switch (i.test()) {
+            case "==" -> registerValue.intValue() == i.testNumber().intValue();
+            case ">" -> registerValue.intValue() > i.testNumber().intValue();
+            case ">=" -> registerValue.intValue() >= i.testNumber().intValue();
+            case "<=" -> registerValue.intValue() <= i.testNumber().intValue();
+            case "<" -> registerValue.intValue() < i.testNumber().intValue();
+            case "!=" -> registerValue.intValue() != i.testNumber().intValue();
+            case null, default -> throw new RuntimeException("Teste invalido");
 
-        i.process();
+        };
+    }
+
+    private void doOperation(Instruction i) {
+
+        Integer increment = i.operationNumber();
+
+        if (i.operation().equals("dec")) {
+            increment = -increment;
+        } else if (!i.operation().equals("inc")) {
+            throw new RuntimeException("Operacao invalida");
+        }
+
+        registers.merge(i.register1(), increment, (v1, v2) -> v1 + v2);
+
+    }
+
+    public void addInstruction(Instruction i) {
+
+        process(i);
 
     }
 
