@@ -77,12 +77,12 @@ class RegisterProgram {
         private boolean doTest() {
             Integer registerValue = registers.getOrDefault(register2, 0);
             return switch (test) {
-                case "==" -> registerValue == testNumber;
-                case ">" -> registerValue > testNumber;
-                case ">=" -> registerValue >= testNumber;
-                case "<=" -> registerValue <= testNumber;
-                case "<" -> registerValue < testNumber;
-                case "!=" -> registerValue != testNumber;
+                case "==" -> registerValue.intValue() == testNumber.intValue();
+                case ">" -> registerValue.intValue() > testNumber.intValue();
+                case ">=" -> registerValue.intValue() >= testNumber.intValue();
+                case "<=" -> registerValue.intValue() <= testNumber.intValue();
+                case "<" -> registerValue.intValue() < testNumber.intValue();
+                case "!=" -> registerValue.intValue() != testNumber.intValue();
                 case null, default -> throw new RuntimeException("Teste invalido");
 
             };
@@ -93,7 +93,7 @@ class RegisterProgram {
             Integer increment = operationNumber;
 
             if (operation.equals("dec")) {
-                increment *= -1;
+                increment = -increment;
             } else if (!operation.equals("inc")) {
                 throw new RuntimeException("Operacao invalida");
             }
