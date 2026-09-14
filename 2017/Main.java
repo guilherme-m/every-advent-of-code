@@ -29,6 +29,7 @@ public class Main{
             case 7 -> new Day07();
             case 8 -> new Day08();
             case 9 -> new Day09();
+            case 10 -> new Day10();
             case null, default -> throw new RuntimeException("Dia nao implementado");
         };
 
