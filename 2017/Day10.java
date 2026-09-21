@@ -99,15 +99,6 @@ public class Day10 implements Day {
             this.steps = steps;
         }
 
-        public KnotHash(int[] steps, int size) {
-
-            this.KNOTS_SIZE = size;
-
-            this.knots = IntStream.range(0, KNOTS_SIZE).toArray();
-
-            this.steps = steps;
-        }
-
         public void calculateHash() {
 
             for (int step : steps) {
