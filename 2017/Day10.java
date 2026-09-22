@@ -74,7 +74,7 @@ public class Day10 implements Day {
             knotHash.calculateHash();
         }
 
-        System.out.println(knotHash.getDenseHash());
+        System.out.println("Part 2: " + knotHash.getDenseHash());
 
     }
 
