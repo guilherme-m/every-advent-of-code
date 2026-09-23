@@ -95,11 +95,10 @@ public class Day11 implements Day {
 
         public int stepsToOrigin() {
 
-            int xSteps = (int) (Math.abs(x) / 0.5);
+            double ax = Math.abs(x);
+            double ay = Math.abs(y);
 
-            int ySteps = (int) (Math.abs(y) - Math.abs(x));
-
-            return xSteps + ySteps;
+            return (int) (ax + Math.max(ax, ay));
 
         }
 
